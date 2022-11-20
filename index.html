@@ -48,7 +48,7 @@
         <table class="table">
             <tr class="table-header">
                 <td class="td--short"> # </td>
-                <td> Name </td>
+                <td> Name <button v-on:click="nameSort('up')">up</button><button v-on:click="nameSort('down')">down</button></td>
                 <td> Email </td>
                 <td> City </td>
                 <td class="td--short"> ID </td>
@@ -71,6 +71,22 @@
             data() {
                 return {
                     users: []
+                }
+            },
+            methods: {
+                nameSort: function (dir) {
+                    let offset = 0;
+                    if (dir === 'down') {
+                        offset = 2;
+                    }
+                    this.users.sort(function(a, b) {
+                        if (a.name > b.name) {
+                            return 1 - offset;
+                        } else if (a.name < b.name) {
+                            return -1 + offset;
+                        }
+                        return 0;
+                    })
                 }
             },
             mounted: function() {
