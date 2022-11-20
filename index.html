@@ -7,12 +7,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue Table</title>
 
+    <!--vue-->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <!--axios-->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+    <!--css-->
+    <style>
+        .main {
+            width: 100%;
+        }
+
+        .table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 800px;
+        }
+
+        .table td {
+            width: 20%;
+            border: 0.1px solid black;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="app">
-        {{ test }}
+    <div class="main" id="app">
+        <table class="table">
+            <tr class="table-header">
+                <td> # </td>
+                <td> Name </td>
+                <td> Email </td>
+                <td> City </td>
+                <td> ID </td>
+            </tr>
+            <tr class="table-body">
+                <td> # </td>
+                <td> Name </td>
+                <td> Email </td>
+                <td> City </td>
+                <td> ID </td>
+            </tr>
+        </table>
     </div>
 
     <script>
@@ -21,8 +59,18 @@
         createApp({
             data() {
                 return {
-                    test: 'Hello Vue!'
+                    users: []
                 }
+            },
+            mounted: () => {
+                axios.get('https://jsonplaceholder.typicode.com/users')
+                    .then(function (response) {
+                        this.users = response.data;
+                        console.log(users);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
             }
         }).mount('#app')
     </script>
