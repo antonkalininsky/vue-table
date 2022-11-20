@@ -30,28 +30,39 @@
             border: 0.1px solid black;
             text-align: center;
         }
+
+        .table .td--short {
+            width: 5%;
+        }
+
+        .table-header td {
+            font-weight: bold;
+        }
+
     </style>
 </head>
 
 <body>
+
     <div class="main" id="app">
         <table class="table">
             <tr class="table-header">
-                <td> # </td>
+                <td class="td--short"> # </td>
                 <td> Name </td>
                 <td> Email </td>
                 <td> City </td>
-                <td> ID </td>
+                <td class="td--short"> ID </td>
             </tr>
-            <tr class="table-body">
-                <td> # </td>
-                <td> Name </td>
-                <td> Email </td>
-                <td> City </td>
-                <td> ID </td>
+            <tr class="table-body" v-for="user, index in users">
+                <td class="td--short"> {{ index + 1 }} </td>
+                <td> {{ user.name }} </td>
+                <td> {{ user.email.toLowerCase() }} </td>
+                <td> {{ user.address.city }} </td>
+                <td class="td--short"> {{ user.id }} </td>
             </tr>
         </table>
     </div>
+
 
     <script>
         const { createApp } = Vue
@@ -62,15 +73,17 @@
                     users: []
                 }
             },
-            mounted: () => {
+            mounted: function() {
                 axios.get('https://jsonplaceholder.typicode.com/users')
-                    .then(function (response) {
+                    .then(response => {
                         this.users = response.data;
                         console.log(users);
+                        console.log('success');
                     })
-                    .catch(function (error) {
+                    .catch(error => {
                         console.log(error);
-                    })
+                        // console.log('fail');
+                    });
             }
         }).mount('#app')
     </script>
