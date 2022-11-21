@@ -39,6 +39,18 @@
             font-weight: bold;
         }
 
+        .pagination {
+            margin: 20px auto 0 auto;
+            width: 800px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .pag-page-link {
+            margin-right: 5px;
+        }
+
     </style>
 </head>
 
@@ -48,19 +60,31 @@
         <table class="table">
             <tr class="table-header">
                 <td class="td--short"> # </td>
-                <td> Name <button v-on:click="nameSort('up')">up</button><button v-on:click="nameSort('down')">down</button></td>
-                <td> Email </td>
-                <td> City </td>
+                <td> Title <button v-on:click="nameSort('up')">up</button><button v-on:click="nameSort('down')">down</button></td>
+                <td class="td--short"> Completed </td>
                 <td class="td--short"> ID </td>
+                <td class="td--short"> User ID </td>
             </tr>
-            <tr class="table-body" v-for="user, index in users">
+            <tr class="table-body" v-for="todo, index in filteredEntries">
                 <td class="td--short"> {{ index + 1 }} </td>
-                <td> {{ user.name }} </td>
-                <td> {{ user.email.toLowerCase() }} </td>
-                <td> {{ user.address.city }} </td>
-                <td class="td--short"> {{ user.id }} </td>
+                <td> {{ todo.title }} </td>
+                <td class="td--short"> {{ todo.completed }} </td>
+                <td class="td--short"> {{ todo.id }} </td>
+                <td class="td--short"> {{ todo.userId }} </td>
             </tr>
         </table>
+        <div class="pagination">
+            <div class="pag-input">
+                Number of entries per page
+                <select v-model="currentEntries" name="pagination-size" id="pagination-size" @change="">
+                    <option v-for="se in showEntries" :value="se">{{ se }}</option>
+                </select>
+            </div>
+            <div class="pag-pages">
+                Pages
+                <a class="pag-page-link" href="#" v-for="page in pagesNum" @click.prevent="paginateEntries( page )">{{ page }}</a>
+            </div>
+        </div>
     </div>
 
 
@@ -70,7 +94,10 @@
         createApp({
             data() {
                 return {
-                    users: []
+                    todos: [],
+                    showEntries: [10, 20, 50, 75, 100],
+                    currentEntries: 10,
+                    currentPage: 0
                 }
             },
             methods: {
@@ -79,26 +106,38 @@
                     if (dir === 'down') {
                         offset = 2;
                     }
-                    this.users.sort(function(a, b) {
-                        if (a.name > b.name) {
+                    this.todos.sort(function(a, b) {
+                        if (a.title > b.title) {
                             return 1 - offset;
-                        } else if (a.name < b.name) {
+                        } else if (a.title < b.title) {
                             return -1 + offset;
                         }
                         return 0;
                     })
+                },
+                paginateEntries: function(page) {
+                    this.currentPage = page - 1;
+                }
+            },
+            computed: {
+                filteredEntries: function() {
+                    return this.todos.slice(this.currentPage * this.currentEntries, (this.currentPage + 1) * this.currentEntries);
+                },
+                pagesNum: function() {
+                    let buf = Math.ceil(this.todos.length/this.currentEntries);
+                    if (this.currentPage > (buf - 1) && buf !== 0) {
+                        this.currentPage = buf - 1;
+                    }
+                    return buf;
                 }
             },
             mounted: function() {
-                axios.get('https://jsonplaceholder.typicode.com/users')
+                axios.get('https://jsonplaceholder.typicode.com/todos')
                     .then(response => {
-                        this.users = response.data;
-                        console.log(users);
-                        console.log('success');
+                        this.todos = response.data;
                     })
                     .catch(error => {
                         console.log(error);
-                        // console.log('fail');
                     });
             }
         }).mount('#app')
