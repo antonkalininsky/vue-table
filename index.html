@@ -40,6 +40,10 @@
             width: 5%;
         }
 
+        .table tr.active {
+            background-color: yellow;
+        }
+
         .table-header td {
             font-weight: bold;
         }
@@ -55,6 +59,11 @@
         .pag-page-link {
             margin-right: 5px;
         }
+
+        .pag-page-link.active {
+            color: red;
+        }
+
     </style>
 </head>
 
@@ -74,7 +83,7 @@
                 <td class="td--short"> ID </td>
                 <td class="td--short"> User ID </td>
             </tr>
-            <tr class="table-body" v-for="todo, index in pagedEntries">
+            <tr class="table-body" v-for="todo, index in pagedEntries" v-bind:class="todo.completed === false ? 'active' : ''">
                 <td class="td--short"> {{ index + 1 }} </td>
                 <td> {{ todo.title }} </td>
                 <td class="td--short"> {{ todo.completed }} </td>
@@ -91,8 +100,10 @@
             </div>
             <div class="pag-pages">
                 Pages
-                <a class="pag-page-link" href="#" v-for="page in pagesNum" @click.prevent="paginateEntries( page )">{{
-                    page }}</a>
+                <a class="pag-page-link" href="#" v-for="page in pagesNum" @click.prevent="paginateEntries( page )" 
+                v-bind:class="(page === (this.currentPage + 1)) ? 'active' : ''">
+                    {{ page }}
+                </a>
             </div>
         </div>
     </div>
