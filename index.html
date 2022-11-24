@@ -72,13 +72,15 @@
     <div class="main" id="app">
         <div class="search">
             Search
-            <input type="text" v-model="searchWord" @change="doSearch()">
+            <input type="text" v-model="searchWord">
         </div>
         <table class="table">
             <tr class="table-header">
                 <td class="td--short"> # </td>
-                <td> Title <button v-on:click="nameSort('up')">up</button><button
-                        v-on:click="nameSort('down')">down</button></td>
+                <td> Title 
+                    <button v-on:click="nameSort('up')">up</button>
+                    <button v-on:click="nameSort('down')">down</button>
+                </td>
                 <td class="td--short"> Completed </td>
                 <td class="td--short"> ID </td>
                 <td class="td--short"> User ID </td>
@@ -139,11 +141,6 @@
                 },
                 paginateEntries: function (page) {
                     this.currentPage = page - 1;
-                },
-                doSearch: function () {
-                    if (this.searchWord.length >= 3) {
-
-                    }
                 }
             },
             computed: {
